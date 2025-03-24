@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 'use client'
 import { useState } from 'react'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 // Grayscale hero + placeholders
 import heroImage from '../../public/hero.jpg'
@@ -15,6 +16,9 @@ import team1Image from '../../public/team1.jpg'
 import team2Image from '../../public/team2.jpg'
 import team3Image from '../../public/team3.jpg'
 
+/** 
+ * Main Landing Page
+ */
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-white text-black scroll-smooth">
@@ -170,6 +174,15 @@ function HeroSection() {
 /* ----------------------------------------------------------------------------
   HOW TO USE SECTION
 ----------------------------------------------------------------------------- */
+
+/** StepItem (desktop) props */
+interface StepItemProps {
+  stepNumber: number;
+  image: StaticImageData | string;
+  title: string;
+  subtitle?: string;
+}
+
 function EnhancedHowTo() {
   return (
     <>
@@ -177,21 +190,21 @@ function EnhancedHowTo() {
       <div className="relative hidden items-center justify-between md:flex">
         <div className="absolute top-1/2 left-0 right-0 z-0 h-1 border-t border-dashed border-gray-300" />
         <StepItem
-          stepNumber="1"
+          stepNumber={1}
           image={step1Image}
           title="Be physically present in a CatchZone"
           subtitle="Check in at your location"
         />
         <StepArrow />
         <StepItem
-          stepNumber="2"
+          stepNumber={2}
           image={step2Image}
           title="See who's around you"
           subtitle="Discover local opportunities"
         />
         <StepArrow />
         <StepItem
-          stepNumber="3"
+          stepNumber={3}
           image={step3Image}
           title="Send an Invitation"
           subtitle="Start a real conversation"
@@ -201,19 +214,19 @@ function EnhancedHowTo() {
       {/* Vertical stack on smaller screens */}
       <div className="flex flex-col space-y-12 md:hidden">
         <MobileStep
-          stepNumber="1"
+          stepNumber={1}
           image={step1Image}
           title="Be physically present in a CatchZone"
           subtitle="Check in at your location"
         />
         <MobileStep
-          stepNumber="2"
+          stepNumber={2}
           image={step2Image}
           title="See who's around you"
           subtitle="Discover local opportunities"
         />
         <MobileStep
-          stepNumber="3"
+          stepNumber={3}
           image={step3Image}
           title="Send an Invitation"
           subtitle="Start a real conversation"
@@ -223,7 +236,7 @@ function EnhancedHowTo() {
   )
 }
 
-function StepItem({ stepNumber, image, title, subtitle }) {
+function StepItem({ stepNumber, image, title, subtitle }: StepItemProps) {
   return (
     <div className="relative z-10 flex w-1/3 flex-col items-center px-2 text-center">
       <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-black text-lg font-bold text-white hover:bg-gray-700 hover:shadow-lg transition-all">
@@ -263,7 +276,10 @@ function StepArrow() {
   )
 }
 
-function MobileStep({ stepNumber, image, title, subtitle }) {
+/** MobileStep props */
+interface MobileStepProps extends StepItemProps {}
+
+function MobileStep({ stepNumber, image, title, subtitle }: MobileStepProps) {
   return (
     <div className="flex flex-col items-center text-center">
       <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-black text-lg font-bold text-white hover:bg-gray-700 hover:shadow-lg transition-all sm:h-14 sm:w-14 sm:text-xl">
@@ -290,8 +306,19 @@ function MobileStep({ stepNumber, image, title, subtitle }) {
 /* ----------------------------------------------------------------------------
   POPULAR CATCHZONES SECTION
 ----------------------------------------------------------------------------- */
+
+/** CatchZone interface */
+interface CatchZone {
+  name: string;
+  location: string;
+  category: string;
+  attendees: string;
+  img: StaticImageData | string;
+  description: string;
+}
+
 function PopularCatchZones() {
-  const allZones = [
+  const allZones: CatchZone[] = [
     {
       name: 'Tech Conference',
       location: 'San Francisco',
@@ -323,16 +350,17 @@ function PopularCatchZones() {
       category: 'Café',
       attendees: '80+',
       img: zone4Image,
-      description: 'Cozy environment to meet new people and share experiences.',
+      description:
+        'Cozy environment to meet new people and share experiences.',
     },
   ]
 
   const categories = ['All', 'Tech', 'Campus', 'Startup', 'Café']
   const locations = ['All', 'San Francisco', 'Oxford', 'Berlin', 'Tokyo']
 
-  const [activeCategory, setActiveCategory] = useState('All')
-  const [activeLocation, setActiveLocation] = useState('All')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [activeCategory, setActiveCategory] = useState<string>('All')
+  const [activeLocation, setActiveLocation] = useState<string>('All')
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
   const filteredZones = allZones.filter((zone) => {
     const matchesCategory =
@@ -429,7 +457,12 @@ function PopularCatchZones() {
   )
 }
 
-function CatchZoneCard({ zone }) {
+/** Props for CatchZoneCard */
+interface CatchZoneCardProps {
+  zone: CatchZone;
+}
+
+function CatchZoneCard({ zone }: CatchZoneCardProps) {
   return (
     <div className="relative overflow-hidden rounded shadow transition-transform duration-300 hover:scale-105">
       <Image
@@ -555,8 +588,13 @@ function Team() {
 /* ----------------------------------------------------------------------------
   FAQ ACCORDION
 ----------------------------------------------------------------------------- */
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 function FaqAccordion() {
-  const faqs = [
+  const faqs: FaqItem[] = [
     {
       question: 'When will you launch?',
       answer: 'The platform will be launched on June 2025.',
@@ -599,7 +637,11 @@ function FaqAccordion() {
   )
 }
 
-function AccordionItem({ item }) {
+interface AccordionItemProps {
+  item: FaqItem;
+}
+
+function AccordionItem({ item }: AccordionItemProps) {
   const [open, setOpen] = useState(false)
 
   return (
